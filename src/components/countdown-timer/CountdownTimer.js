@@ -4,30 +4,41 @@ export default function CountdownTimer({ startingMinutes }) {
     // Creating initial state with 60 seconds to work from
     const initialTime = startingMinutes * 60
     const [time, setTime] = useState(initialTime);
-    const [referenceTime, setReferenceTime] = useState(Date.now());
+    // Initialized to timeStamp when document loaded
+    const [timeStamp, setTimeStamp] = useState(Date.now());
 
     useEffect(() => {
-      let animationFrameId;
+      let requestID;
 
       const countDownUntilZero = () => {
+        // Current timeStamp in the iteration of the function
         const now = Date.now();
-        const interval = now - referenceTime;
+        // Elapsed = current timeStamp - timeStamp of when document loaded
+        const elapsed = now - timeStamp;
 
-        // if (time <= 0) return 0;
-        if (interval >= 1000 && time > 0) {
-          setReferenceTime(now);
-          setTime(prevTime => prevTime - Math.floor(interval / 1000));
+        // Makes sure elapsed does not surpass 1000 ms so that each iteration of countDownUntilZero
+        // is 1 second in duration. Also checks that counter doesn't go into negatives
+        if (elapsed > 1000 && time > 0) {
+          // Resets the reference point for next calculation
+          setTimeStamp(now);
+          // Updates time state by subtracting 1000 ms (1 s) from time
+          setTime(prevTime => prevTime - Math.floor(elapsed / 1000));
         }
 
-        animationFrameId = requestAnimationFrame(countDownUntilZero);
+        // Updates requestID each time rAF is called
+        requestID = requestAnimationFrame(countDownUntilZero);
       };
 
-      animationFrameId = requestAnimationFrame(countDownUntilZero);
+      // Creates final requestID after countDownUntilZero finishes
+      requestID = requestAnimationFrame(countDownUntilZero);
 
+      // Cleanup
       return () => {
-        cancelAnimationFrame(animationFrameId);
+        // Ensures animation callback loop stops when component unmounts by passing
+        // the rAF requestID into cancelAnimationFrame()
+        cancelAnimationFrame(requestID);
       };
-    });
+    }, [time, timeStamp]);
 
 
     return (
