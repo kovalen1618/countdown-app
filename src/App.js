@@ -5,7 +5,7 @@ import CountdownTimer from './components/countdown-timer/CountdownTimer';
 function App() {
   return (
     <div className="App">
-      <CountdownTimer startingMinutes={105} />
+      <CountdownTimer startingMinutes={5} />
     </div>
   );
 }

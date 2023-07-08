@@ -4,14 +4,30 @@ export default function CountdownTimer({ startingMinutes }) {
     // Creating initial state with 60 seconds to work from
     const initialTime = startingMinutes * 60
     const [time, setTime] = useState(initialTime);
+    const [referenceTime, setReferenceTime] = useState(Date.now());
 
-    // Effect for re-rendering DOM node on every time decrement
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            setTime(time => time - 1);
-        }, 1000);
-        return () => clearInterval(intervalId);
-    }, [time]);
+      let animationFrameId;
+
+      const countDownUntilZero = () => {
+        const now = Date.now();
+        const interval = now - referenceTime;
+
+        // if (time <= 0) return 0;
+        if (interval >= 1000 && time > 0) {
+          setReferenceTime(now);
+          setTime(prevTime => prevTime - Math.floor(interval / 1000));
+        }
+
+        animationFrameId = requestAnimationFrame(countDownUntilZero);
+      };
+
+      animationFrameId = requestAnimationFrame(countDownUntilZero);
+
+      return () => {
+        cancelAnimationFrame(animationFrameId);
+      };
+    });
 
 
     return (
