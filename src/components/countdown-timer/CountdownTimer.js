@@ -16,7 +16,7 @@ export default function CountdownTimer({ startingMinutes }) {
 
     return (
         <>
-            <div>
+            <div data-testid='countdown-timer'>
                 <span>{Math.floor(time / 36000)}</span>
                 <span>{Math.floor((time % 36000) / 3600)}</span>
                 :
