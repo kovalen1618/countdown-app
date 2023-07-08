@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
 
-import './CountdownTimer.css'
-
 export default function CountdownTimer({ startingMinutes }) {
     // Creating initial state with 60 seconds to work from
     const initialTime = startingMinutes * 60
@@ -20,7 +18,7 @@ export default function CountdownTimer({ startingMinutes }) {
         <>
             <div>
                 <span>{Math.floor(time / 36000)}</span>
-                <span>{Math.floor((time / 36000) / 3600)}</span>
+                <span>{Math.floor((time % 36000) / 3600)}</span>
                 :
                 <span>{Math.floor((time % 3600) / 600)}</span>
                 <span>{Math.floor((time % 600) / 60)}</span>
